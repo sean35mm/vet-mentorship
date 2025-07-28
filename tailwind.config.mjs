@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
+  darkMode: ["class"],
   content: [
     './pages/**/*.{js,ts,jsx,tsx,mdx}',
     './components/**/*.{js,ts,jsx,tsx,mdx}',
@@ -7,122 +8,136 @@ export default {
     './lib/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
+    container: {
+      center: true,
+      padding: "2rem",
+      screens: {
+        "2xl": "1400px",
+      },
+    },
     extend: {
       colors: {
-        // Custom color palette for veteran mentorship platform
+        // Military-inspired color palette
+        barn_red: {
+          DEFAULT: '#780000',
+          100: '#180000',
+          200: '#310000',
+          300: '#490000',
+          400: '#620000',
+          500: '#780000',
+          600: '#c80000',
+          700: '#ff1616',
+          800: '#ff6464',
+          900: '#ffb1b1'
+        },
+        fire_brick: {
+          DEFAULT: '#c1121f',
+          100: '#260406',
+          200: '#4d070c',
+          300: '#730b12',
+          400: '#990e17',
+          500: '#c1121f',
+          600: '#eb2330',
+          700: '#f05a64',
+          800: '#f59198',
+          900: '#fac8cb'
+        },
+        papaya_whip: {
+          DEFAULT: '#fdf0d5',
+          100: '#593c04',
+          200: '#b17908',
+          300: '#f5ae22',
+          400: '#f9cf7b',
+          500: '#fdf0d5',
+          600: '#fdf2dc',
+          700: '#fef5e5',
+          800: '#fef9ed',
+          900: '#fffcf6'
+        },
+        prussian_blue: {
+          DEFAULT: '#003049',
+          100: '#00090e',
+          200: '#00131d',
+          300: '#001c2b',
+          400: '#002539',
+          500: '#003049',
+          600: '#00679f',
+          700: '#00a0f7',
+          800: '#50c2ff',
+          900: '#a7e0ff'
+        },
+        air_superiority_blue: {
+          DEFAULT: '#669bbc',
+          100: '#122028',
+          200: '#233f51',
+          300: '#355f79',
+          400: '#477fa2',
+          500: '#669bbc',
+          600: '#85afc9',
+          700: '#a4c3d7',
+          800: '#c2d7e4',
+          900: '#e1ebf2'
+        },
+        // Keep shadcn/ui compatibility
+        border: "hsl(var(--border))",
+        input: "hsl(var(--input))",
+        ring: "hsl(var(--ring))",
+        background: "hsl(var(--background))",
+        foreground: "hsl(var(--foreground))",
         primary: {
-          50: '#eff6ff',
-          100: '#dbeafe',
-          200: '#bfdbfe',
-          300: '#93c5fd',
-          400: '#60a5fa',
-          500: '#3b82f6',
-          600: '#2563eb',
-          700: '#1d4ed8',
-          800: '#1e40af',
-          900: '#1e3a8a',
-          950: '#172554',
+          DEFAULT: "hsl(var(--primary))",
+          foreground: "hsl(var(--primary-foreground))",
         },
         secondary: {
-          50: '#f8fafc',
-          100: '#f1f5f9',
-          200: '#e2e8f0',
-          300: '#cbd5e1',
-          400: '#94a3b8',
-          500: '#64748b',
-          600: '#475569',
-          700: '#334155',
-          800: '#1e293b',
-          900: '#0f172a',
-          950: '#020617',
+          DEFAULT: "hsl(var(--secondary))",
+          foreground: "hsl(var(--secondary-foreground))",
+        },
+        destructive: {
+          DEFAULT: "hsl(var(--destructive))",
+          foreground: "hsl(var(--destructive-foreground))",
+        },
+        muted: {
+          DEFAULT: "hsl(var(--muted))",
+          foreground: "hsl(var(--muted-foreground))",
         },
         accent: {
-          50: '#fef2f2',
-          100: '#fee2e2',
-          200: '#fecaca',
-          300: '#fca5a5',
-          400: '#f87171',
-          500: '#ef4444',
-          600: '#dc2626',
-          700: '#b91c1c',
-          800: '#991b1b',
-          900: '#7f1d1d',
-          950: '#450a0a',
+          DEFAULT: "hsl(var(--accent))",
+          foreground: "hsl(var(--accent-foreground))",
         },
-        success: {
-          50: '#f0fdf4',
-          100: '#dcfce7',
-          200: '#bbf7d0',
-          300: '#86efac',
-          400: '#4ade80',
-          500: '#22c55e',
-          600: '#16a34a',
-          700: '#15803d',
-          800: '#166534',
-          900: '#14532d',
-          950: '#052e16',
+        popover: {
+          DEFAULT: "hsl(var(--popover))",
+          foreground: "hsl(var(--popover-foreground))",
         },
-        warning: {
-          50: '#fffbeb',
-          100: '#fef3c7',
-          200: '#fde68a',
-          300: '#fcd34d',
-          400: '#fbbf24',
-          500: '#f59e0b',
-          600: '#d97706',
-          700: '#b45309',
-          800: '#92400e',
-          900: '#78350f',
-          950: '#451a03',
+        card: {
+          DEFAULT: "hsl(var(--card))",
+          foreground: "hsl(var(--card-foreground))",
         },
-        error: {
-          50: '#fef2f2',
-          100: '#fee2e2',
-          200: '#fecaca',
-          300: '#fca5a5',
-          400: '#f87171',
-          500: '#ef4444',
-          600: '#dc2626',
-          700: '#b91c1c',
-          800: '#991b1b',
-          900: '#7f1d1d',
-          950: '#450a0a',
-        },
-      },
-      fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
-        mono: ['JetBrains Mono', 'Consolas', 'monospace'],
-      },
-      spacing: {
-        '18': '4.5rem',
-        '88': '22rem',
-        '128': '32rem',
       },
       borderRadius: {
-        '4xl': '2rem',
+        lg: "var(--radius)",
+        md: "calc(var(--radius) - 2px)",
+        sm: "calc(var(--radius) - 4px)",
       },
-      boxShadow: {
-        'soft': '0 2px 15px -3px rgba(0, 0, 0, 0.07), 0 10px 20px -2px rgba(0, 0, 0, 0.04)',
-        'medium': '0 4px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
-        'hard': '0 10px 40px -10px rgba(0, 0, 0, 0.2)',
-      },
-      animation: {
-        'fade-in': 'fadeIn 0.5s ease-in-out',
-        'slide-up': 'slideUp 0.3s ease-out',
-        'slide-down': 'slideDown 0.3s ease-out',
-        'scale-in': 'scaleIn 0.2s ease-out',
+      fontFamily: {
+        sans: ['Rubik', 'system-ui', 'sans-serif'],
+        mono: ['JetBrains Mono', 'Consolas', 'monospace'],
+        editorial: ['PPEditorialNew', 'serif'],
       },
       keyframes: {
+        "accordion-down": {
+          from: { height: "0" },
+          to: { height: "var(--radix-accordion-content-height)" },
+        },
+        "accordion-up": {
+          from: { height: "var(--radix-accordion-content-height)" },
+          to: { height: "0" },
+        },
         fadeIn: {
           '0%': { opacity: '0' },
           '100%': { opacity: '1' },
         },
         slideUp: {
-          '0%': { transform: 'translateY(10px)', opacity: '0' },
-          '100%': { transform: 'translateY(0)', opacity: '1' },
-        },
-        slideDown: {
-          '0%': { transform: 'translateY(-10px)', opacity: '0' },
+          '0%': { transform: 'translateY(20px)', opacity: '0' },
           '100%': { transform: 'translateY(0)', opacity: '1' },
         },
         scaleIn: {
@@ -130,9 +145,14 @@ export default {
           '100%': { transform: 'scale(1)', opacity: '1' },
         },
       },
+      animation: {
+        "accordion-down": "accordion-down 0.2s ease-out",
+        "accordion-up": "accordion-up 0.2s ease-out",
+        'fade-in': 'fadeIn 0.5s ease-in-out',
+        'slide-up': 'slideUp 0.5s ease-out',
+        'scale-in': 'scaleIn 0.3s ease-out',
+      },
     },
   },
-  plugins: [
-    require('@tailwindcss/typography'),
-  ],
-};
+  plugins: [require("tailwindcss-animate")],
+}

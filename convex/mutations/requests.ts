@@ -84,10 +84,10 @@ export const createRequest = mutation({
     }
 
     // Check if the requested time falls within mentor's availability
-    const requestedHour = parseInt(args.requestedTime.split(':')[0]);
+    const requestedHour = parseInt((args.requestedTime || "0:0").split(":")[0] || "0");
     const isTimeAvailable = availability.some(slot => {
-      const startHour = parseInt(slot.startTime.split(':')[0]);
-      const endHour = parseInt(slot.endTime.split(':')[0]);
+      const startHour = parseInt((slot.startTime || "0:0").split(":")[0] || "0");
+      const endHour = parseInt((slot.endTime || "0:0").split(":")[0] || "0");
       return requestedHour >= startHour && requestedHour < endHour;
     });
 
@@ -144,10 +144,30 @@ export const createRequest = mutation({
       duration: args.duration || 60,
       subject: args.subject.trim(),
       message: args.message.trim(),
-      mentorshipArea: args.mentorshipArea?.trim(),
+      ...(args.mentorshipArea ? { mentorshipArea: args.mentorshipArea.trim() } : {}),
       status: 'pending',
       createdAt: now,
       updatedAt: now,
+    });
+
+    // Create notification for mentor
+    await ctx.db.insert('notifications', {
+      userId: args.mentorId,
+      type: 'request',
+      title: 'New Mentorship Request',
+      message: `${mentee.firstName} ${mentee.lastName} wants to schedule a mentorship session with you.`,
+      isRead: false,
+      isActionable: true,
+      actions: {
+        primary: { label: 'Accept', action: 'accept_request' },
+        secondary: { label: 'Decline', action: 'decline_request' },
+      },
+      relatedUserId: args.menteeId,
+      relatedRequestId: requestId,
+      metadata: {
+        requestId: requestId,
+      },
+      createdAt: now,
     });
 
     return requestId;
@@ -202,7 +222,7 @@ export const acceptRequest = mutation({
     // Update the request status
     await ctx.db.patch(args.requestId, {
       status: 'accepted',
-      mentorResponse: args.mentorResponse?.trim(),
+      ...(args.mentorResponse ? { mentorResponse: args.mentorResponse.trim() } : {}),
       respondedAt: now,
       updatedAt: now,
     });
@@ -219,6 +239,29 @@ export const acceptRequest = mutation({
       createdAt: now,
       updatedAt: now,
     });
+
+    // Create notification for mentee about acceptance
+    const mentee = await ctx.db.get(request.menteeId);
+    const mentor = await ctx.db.get(request.mentorId);
+    
+    if (mentee && mentor) {
+      await ctx.db.insert('notifications', {
+        userId: request.menteeId,
+        type: 'request',
+        title: 'Request Accepted',
+        message: `${mentor.firstName} ${mentor.lastName} accepted your mentorship request for ${request.requestedDate} at ${request.requestedTime}.`,
+        isRead: false,
+        isActionable: false,
+        relatedUserId: request.mentorId,
+        relatedRequestId: args.requestId,
+        relatedSessionId: sessionId,
+        metadata: {
+          requestId: args.requestId,
+          sessionId: sessionId,
+        },
+        createdAt: now,
+      });
+    }
 
     return { requestId: args.requestId, sessionId };
   },
@@ -252,10 +295,31 @@ export const declineRequest = mutation({
     // Update the request status
     await ctx.db.patch(args.requestId, {
       status: 'declined',
-      mentorResponse: args.mentorResponse?.trim(),
+      ...(args.mentorResponse ? { mentorResponse: args.mentorResponse.trim() } : {}),
       respondedAt: now,
       updatedAt: now,
     });
+
+    // Create notification for mentee about decline
+    const mentee = await ctx.db.get(request.menteeId);
+    const mentor = await ctx.db.get(request.mentorId);
+    
+    if (mentee && mentor) {
+      await ctx.db.insert('notifications', {
+        userId: request.menteeId,
+        type: 'request',
+        title: 'Request Declined',
+        message: `${mentor.firstName} ${mentor.lastName} declined your mentorship request.${args.mentorResponse ? ` Reason: ${args.mentorResponse}` : ''}`,
+        isRead: false,
+        isActionable: false,
+        relatedUserId: request.mentorId,
+        relatedRequestId: args.requestId,
+        metadata: {
+          requestId: args.requestId,
+        },
+        createdAt: now,
+      });
+    }
 
     return args.requestId;
   },

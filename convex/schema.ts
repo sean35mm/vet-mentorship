@@ -4,6 +4,9 @@ import { v } from 'convex/values';
 export default defineSchema({
   // Users table - stores user profiles and authentication data
   users: defineTable({
+    // Authentication
+    clerkId: v.string(),
+    
     // Basic profile information
     email: v.string(),
     firstName: v.string(),
@@ -40,11 +43,13 @@ export default defineSchema({
     // Account status
     isVerified: v.boolean(),
     isActive: v.boolean(),
+    profileComplete: v.boolean(),
     
     // Timestamps
     createdAt: v.number(),
     updatedAt: v.number(),
   })
+    .index('by_clerk_id', ['clerkId'])
     .index('by_email', ['email'])
     .index('by_mentor_status', ['isMentor', 'isActive'])
     .index('by_industry', ['industry'])
@@ -179,6 +184,59 @@ export default defineSchema({
     .index('by_reviewer', ['reviewerId'])
     .index('by_reviewee', ['revieweeId'])
     .index('by_reviewee_public', ['revieweeId', 'isPublic', 'isApproved']),
+
+  // Notifications table - system notifications for users
+  notifications: defineTable({
+    userId: v.id('users'),
+    
+    // Notification content
+    type: v.union(
+      v.literal('request'),
+      v.literal('session'),
+      v.literal('review'),
+      v.literal('system'),
+      v.literal('reminder')
+    ),
+    title: v.string(),
+    message: v.string(),
+    
+    // Notification status
+    isRead: v.boolean(),
+    readAt: v.optional(v.number()),
+    
+    // Actionable notifications
+    isActionable: v.boolean(),
+    actions: v.optional(v.object({
+      primary: v.optional(v.object({
+        label: v.string(),
+        action: v.string(), // Action identifier
+      })),
+      secondary: v.optional(v.object({
+        label: v.string(),
+        action: v.string(),
+      })),
+    })),
+    
+    // Related data
+    relatedUserId: v.optional(v.id('users')), // User who triggered the notification
+    relatedRequestId: v.optional(v.id('mentorshipRequests')),
+    relatedSessionId: v.optional(v.id('sessions')),
+    relatedReviewId: v.optional(v.id('reviews')),
+    
+    // Metadata
+    metadata: v.optional(v.object({
+      requestId: v.optional(v.string()),
+      sessionId: v.optional(v.string()),
+      reviewId: v.optional(v.string()),
+    })),
+    
+    // Timestamps
+    createdAt: v.number(),
+  })
+    .index('by_user', ['userId'])
+    .index('by_user_unread', ['userId', 'isRead'])
+    .index('by_type', ['type'])
+    .index('by_created', ['createdAt']),
 
   // Messages table - for future chat functionality
   messages: defineTable({

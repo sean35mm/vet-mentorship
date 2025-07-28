@@ -16,7 +16,7 @@ export const getAvailability = query({
       if (!acc[slot.dayOfWeek]) {
         acc[slot.dayOfWeek] = [];
       }
-      acc[slot.dayOfWeek].push({
+      acc[slot.dayOfWeek]?.push({
         _id: slot._id,
         startTime: slot.startTime,
         endTime: slot.endTime,
@@ -89,8 +89,8 @@ export const getAvailableSlots = query({
     const availableSlots = [];
     
     for (const slot of availability) {
-      const startHour = parseInt(slot.startTime.split(':')[0]);
-      const endHour = parseInt(slot.endTime.split(':')[0]);
+      const startHour = parseInt((slot.startTime || "0:0").split(":")[0] || "0");
+      const endHour = parseInt((slot.endTime || "0:0").split(":")[0] || "0");
       
       for (let hour = startHour; hour < endHour; hour++) {
         const timeSlot = `${hour.toString().padStart(2, '0')}:00`;
@@ -126,8 +126,8 @@ export const getAvailabilitySummary = query({
     };
 
     availability.forEach(slot => {
-      const startHour = parseInt(slot.startTime.split(':')[0]);
-      const endHour = parseInt(slot.endTime.split(':')[0]);
+      const startHour = parseInt((slot.startTime || "0:0").split(":")[0] || "0");
+      const endHour = parseInt((slot.endTime || "0:0").split(":")[0] || "0");
       const duration = endHour - startHour;
       
       summary.totalHoursPerWeek += duration;
@@ -154,8 +154,8 @@ export const getAvailabilitySummary = query({
 // Helper function to format time for display
 function formatTime(time: string): string {
   const [hours, minutes] = time.split(':');
-  const hour = parseInt(hours);
+  const hour = parseInt(hours || "0");
   const ampm = hour >= 12 ? 'PM' : 'AM';
   const displayHour = hour % 12 || 12;
-  return `${displayHour}:${minutes} ${ampm}`;
+  return `${displayHour}:${minutes || "00"} ${ampm}`;
 }

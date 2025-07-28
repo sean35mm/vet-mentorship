@@ -32,7 +32,7 @@
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitOverride": true,
-    "exactOptionalPropertyTypes": true
+    "exactOptionalPropertyTypes": false
   },
   "include": [
     "next-env.d.ts",

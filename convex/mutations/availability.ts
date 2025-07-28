@@ -69,10 +69,10 @@ export const setAvailability = mutation({
           const slot1 = slots[i];
           const slot2 = slots[j];
           
-          const start1 = timeToMinutes(slot1.startTime);
-          const end1 = timeToMinutes(slot1.endTime);
-          const start2 = timeToMinutes(slot2.startTime);
-          const end2 = timeToMinutes(slot2.endTime);
+          const start1 = slot1 ? timeToMinutes(slot1.startTime) : 0;
+          const end1 = slot1 ? timeToMinutes(slot1.endTime) : 0;
+          const start2 = slot2 ? timeToMinutes(slot2.startTime) : 0;
+          const end2 = slot2 ? timeToMinutes(slot2.endTime) : 0;
 
           // Check for overlap
           if (start1 < end2 && start2 < end1) {
@@ -304,7 +304,7 @@ export const deleteTimeSlot = mutation({
       .withIndex('by_mentor', (q) => q.eq('mentorId', args.userId))
       .filter((q) => 
         q.and(
-          q.gte(q.field('scheduledDate'), today),
+          q.gte(q.field("scheduledDate"), today || new Date().toISOString()),
           q.or(
             q.eq(q.field('status'), 'scheduled'),
             q.eq(q.field('status'), 'in_progress')
@@ -358,7 +358,7 @@ export const clearAvailability = mutation({
       .withIndex('by_mentor', (q) => q.eq('mentorId', args.userId))
       .filter((q) => 
         q.and(
-          q.gte(q.field('scheduledDate'), today),
+          q.gte(q.field("scheduledDate"), today || new Date().toISOString()),
           q.or(
             q.eq(q.field('status'), 'scheduled'),
             q.eq(q.field('status'), 'in_progress')
@@ -389,5 +389,5 @@ export const clearAvailability = mutation({
 // Helper function to convert time string to minutes since midnight
 function timeToMinutes(timeString: string): number {
   const [hours, minutes] = timeString.split(':').map(Number);
-  return hours * 60 + minutes;
+  return (hours || 0) * 60 + (minutes || 0);
 }

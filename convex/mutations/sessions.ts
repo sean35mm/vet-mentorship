@@ -167,6 +167,34 @@ export const startSession = mutation({
       updatedAt: now,
     });
 
+    // Create notifications for both parties about session start
+    const mentee = await ctx.db.get(session.menteeId);
+    const mentor = await ctx.db.get(session.mentorId);
+    
+    if (mentee && mentor) {
+      // Notify the other party that session has started
+      const otherUserId = args.userId === session.mentorId ? session.menteeId : session.mentorId;
+      const currentUserName = args.userId === session.mentorId ? `${mentor.firstName} ${mentor.lastName}` : `${mentee.firstName} ${mentee.lastName}`;
+      
+      await ctx.db.insert('notifications', {
+        userId: otherUserId,
+        type: 'session',
+        title: 'Session Started',
+        message: `Your mentorship session with ${currentUserName} has started.`,
+        isRead: false,
+        isActionable: true,
+        actions: {
+          primary: { label: 'Join Session', action: 'join_session' },
+        },
+        relatedUserId: args.userId,
+        relatedSessionId: args.sessionId,
+        metadata: {
+          sessionId: args.sessionId,
+        },
+        createdAt: now,
+      });
+    }
+
     return args.sessionId;
   },
 });
@@ -226,6 +254,44 @@ export const completeSession = mutation({
       status: 'completed',
       updatedAt: now,
     });
+
+    // Create notifications for both parties about session completion
+    const mentee = await ctx.db.get(session.menteeId);
+    const mentor = await ctx.db.get(session.mentorId);
+    
+    if (mentee && mentor) {
+      // Notify both parties about completion and request for review
+      const notifications = [
+        {
+          userId: session.menteeId,
+          otherUserName: `${mentor.firstName} ${mentor.lastName}`,
+        },
+        {
+          userId: session.mentorId,
+          otherUserName: `${mentee.firstName} ${mentee.lastName}`,
+        },
+      ];
+      
+      for (const notif of notifications) {
+        await ctx.db.insert('notifications', {
+          userId: notif.userId,
+          type: 'session',
+          title: 'Session Completed',
+          message: `Your mentorship session with ${notif.otherUserName} has been completed. Please consider leaving a review.`,
+          isRead: false,
+          isActionable: true,
+          actions: {
+            primary: { label: 'Leave Review', action: 'leave_review' },
+          },
+          relatedUserId: notif.userId === session.menteeId ? session.mentorId : session.menteeId,
+          relatedSessionId: args.sessionId,
+          metadata: {
+            sessionId: args.sessionId,
+          },
+          createdAt: now,
+        });
+      }
+    }
 
     return args.sessionId;
   },

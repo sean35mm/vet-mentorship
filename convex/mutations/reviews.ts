@@ -84,9 +84,9 @@ export const createReview = mutation({
       revieweeId: args.revieweeId,
       rating: args.rating,
       feedback: args.feedback.trim(),
-      communicationRating: args.communicationRating,
-      helpfulnessRating: args.helpfulnessRating,
-      professionalismRating: args.professionalismRating,
+      ...(args.communicationRating !== undefined ? { communicationRating: args.communicationRating } : {}),
+      ...(args.helpfulnessRating !== undefined ? { helpfulnessRating: args.helpfulnessRating } : {}),
+      ...(args.professionalismRating !== undefined ? { professionalismRating: args.professionalismRating } : {}),
       isPublic: args.isPublic !== undefined ? args.isPublic : true,
       isApproved: true, // Auto-approve for now, could add moderation later
       createdAt: now,

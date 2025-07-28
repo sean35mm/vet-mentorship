@@ -139,7 +139,7 @@ export const getUpcomingSessions = query({
         .withIndex('by_mentor', (q) => q.eq('mentorId', args.userId))
         .filter((q) => 
           q.and(
-            q.gte(q.field('scheduledDate'), today),
+            q.gte(q.field("scheduledDate"), today || new Date().toISOString()),
             q.or(
               q.eq(q.field('status'), 'scheduled'),
               q.eq(q.field('status'), 'in_progress')
@@ -158,7 +158,7 @@ export const getUpcomingSessions = query({
         .withIndex('by_mentee', (q) => q.eq('menteeId', args.userId))
         .filter((q) => 
           q.and(
-            q.gte(q.field('scheduledDate'), today),
+            q.gte(q.field("scheduledDate"), today || new Date().toISOString()),
             q.or(
               q.eq(q.field('status'), 'scheduled'),
               q.eq(q.field('status'), 'in_progress')
