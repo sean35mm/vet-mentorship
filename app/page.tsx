@@ -1,5 +1,7 @@
 'use client';
 
+import { SignInButton, SignUpButton, UserButton } from '@clerk/nextjs';
+import { Authenticated, Unauthenticated } from 'convex/react';
 import {
     ArrowRight,
     Award,
@@ -16,8 +18,6 @@ import { Avatar, AvatarFallback } from '../components/ui/avatar';
 import { Badge } from '../components/ui/badge';
 import { Button } from '../components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
-import { SignInButton, SignUpButton, UserButton } from '@clerk/nextjs';
-import { Authenticated, Unauthenticated } from 'convex/react';
 
 export default function LandingPage() {
   return (
@@ -74,7 +74,8 @@ export default function LandingPage() {
             <h1 className="text-4xl font-bold tracking-tight text-prussian_blue-500 sm:text-6xl font-editorial-italic">
               Your trusted Mentorship Platform for Veterans
               <br />
-              <span className="text-fire_brick-500 font-editorial italic font-bold">No one left behind</span>
+              <br />
+              <span className="text-fire_brick-500 text-7xl font-editorial italic font-bold">No one left behind</span>
             </h1>
             <p className="mt-6 text-lg leading-8 text-prussian_blue-400 max-w-2xl mx-auto">
               Connect with fellow veterans who understand your journey. Get guidance, share experiences,
