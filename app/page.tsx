@@ -82,11 +82,6 @@ export default function LandingPage() {
               and build lasting relationships that help you thrive in civilian life.
             </p>
             <div className="mt-10 flex items-center justify-center gap-x-6">
-              <Button size="lg" className="bg-fire_brick-500 hover:bg-fire_brick-600 text-papaya_whip-500" asChild>
-                <Link href="/dashboard">
-                  Start Your Journey <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
               <Button variant="outline" size="lg" className="border-prussian_blue-300 text-prussian_blue-500 hover:bg-prussian_blue-50" asChild>
                 <Link href="#features">Learn More</Link>
               </Button>
