@@ -104,27 +104,27 @@ export default function LandingPage() {
                 <Users className="h-6 w-6" />
               </div>
               <div className="text-3xl font-bold text-papaya_whip-500">2,500+</div>
-              <div className="text-sm text-air_superiority_blue-300">Veterans Served</div>
+              <div className="text-sm text-air_superiority_blue-400">Veterans Served</div>
             </div>
             <div className="text-center">
               <div className="flex items-center justify-center mb-2 text-fire_brick-400">
                 <Award className="h-6 w-6" />
               </div>
               <div className="text-3xl font-bold text-papaya_whip-500">500+</div>
-              <div className="text-sm text-air_superiority_blue-300">Expert Mentors</div>
+              <div className="text-sm text-air_superiority_blue-400">Expert Mentors</div>
             </div>
             <div className="text-center">
               <div className="flex items-center justify-center mb-2 text-fire_brick-400">
                 <Calendar className="h-6 w-6" />
               </div>
-              <div className="text-3xl font-bold text-papaya_whip-500">15,000+</div><div className="text-sm text-air_superiority_blue-300">Missions Completed</div>
+              <div className="text-3xl font-bold text-papaya_whip-500">15,000+</div><div className="text-sm text-air_superiority_blue-400">Missions Completed</div>
             </div>
             <div className="text-center">
               <div className="flex items-center justify-center mb-2 text-fire_brick-400">
                 <Star className="h-6 w-6" />
               </div>
               <div className="text-3xl font-bold text-papaya_whip-500">4.9/5</div>
-              <div className="text-sm text-air_superiority_blue-300">Mission Success Rate</div>
+              <div className="text-sm text-air_superiority_blue-400">Mission Success Rate</div>
             </div>
           </div>
         </div>
@@ -165,7 +165,7 @@ export default function LandingPage() {
                   <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-fire_brick-100 text-fire_brick-600">
                     <Calendar className="h-6 w-6" />
                   </div>
-                  <CardTitle className="text-xl text-prussian_blue-500">Mission Scheduling</CardTitle>
+                  <CardTitle className="text-xl text-prussian_blue-400">Mission Scheduling</CardTitle>
                 </div>
               </CardHeader>
               <CardContent>
@@ -342,7 +342,7 @@ export default function LandingPage() {
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </Link>
                 </Button>
-                <Button size="lg" variant="outline" className="text-lg px-8 border-2 border-papaya_whip-500/50 text-papaya_whip-500 hover:bg-papaya_whip-500/10 transition-all duration-200" asChild>
+                <Button size="lg" className="text-lg px-8 bg-papaya_whip-500 text-fire_brick-600 hover:bg-papaya_whip-400 shadow-lg hover:shadow-xl transition-all duration-200" asChild>
                   <Link href="/search">
                     Browse Mentors
                     <Users className="ml-2 h-5 w-5" />
