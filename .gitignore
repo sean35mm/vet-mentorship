@@ -116,3 +116,36 @@ storybook-static
 # Temporary folders
 tmp/
 temp/
+
+# Sensitive documentation and notes
+AGENTS.md
+BUILD_CHECKLIST.md
+PRD.txt
+*.private.*
+notes/
+docs/private/
+
+# Personal IDE configurations
+.cursor/
+.vscode/settings.json
+.vscode/launch.json
+
+# Development and testing data
+test-data/
+seed-data/
+*.db
+*.sqlite
+*.sqlite3
+
+# API keys and secrets (additional protection)
+secrets/
+keys/
+*.key
+auth.json
+service-account*.json
+
+# Personal/temporary files
+TODO.md
+NOTES.md
+scratch/
+temp/
