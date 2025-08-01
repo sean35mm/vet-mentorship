@@ -4,6 +4,13 @@ import { v } from 'convex/values';
 // Get user's availability schedule
 export const getAvailability = query({
   args: { userId: v.id('users') },
+  returns: v.record(v.string(), v.array(v.object({
+    _id: v.id('availability'),
+    startTime: v.string(),
+    endTime: v.string(),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  }))),
   handler: async (ctx, args) => {
     const availability = await ctx.db
       .query('availability')
@@ -13,10 +20,11 @@ export const getAvailability = query({
 
     // Group by day of week for easier frontend consumption
     const schedule = availability.reduce((acc, slot) => {
-      if (!acc[slot.dayOfWeek]) {
-        acc[slot.dayOfWeek] = [];
+      const dayKey = slot.dayOfWeek.toString();
+      if (!acc[dayKey]) {
+        acc[dayKey] = [];
       }
-      acc[slot.dayOfWeek]?.push({
+      acc[dayKey]?.push({
         _id: slot._id,
         startTime: slot.startTime,
         endTime: slot.endTime,
@@ -24,7 +32,7 @@ export const getAvailability = query({
         updatedAt: slot.updatedAt,
       });
       return acc;
-    }, {} as Record<number, any[]>);
+    }, {} as Record<string, any[]>);
 
     return schedule;
   },

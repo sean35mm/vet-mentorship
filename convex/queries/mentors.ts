@@ -8,6 +8,38 @@ export const searchMentors = query({
     limit: v.optional(v.number()),
     offset: v.optional(v.number()),
   },
+  returns: v.object({
+    mentors: v.array(v.object({
+      _id: v.id('users'),
+      firstName: v.string(),
+      lastName: v.string(),
+      profileImage: v.optional(v.string()),
+      bio: v.optional(v.string()),
+      location: v.optional(v.string()),
+      militaryBranch: v.optional(v.union(
+        v.literal('Army'),
+        v.literal('Navy'),
+        v.literal('Air Force'),
+        v.literal('Marines'),
+        v.literal('Coast Guard'),
+        v.literal('Space Force')
+      )),
+      militaryRank: v.optional(v.string()),
+      yearsOfService: v.optional(v.number()),
+      currentRole: v.optional(v.string()),
+      company: v.optional(v.string()),
+      industry: v.optional(v.string()),
+      skills: v.optional(v.array(v.string())),
+      mentorshipAreas: v.optional(v.array(v.string())),
+      isVerified: v.boolean(),
+      hasAvailability: v.boolean(),
+      avgRating: v.number(),
+      totalReviews: v.number(),
+      createdAt: v.number(),
+    })),
+    total: v.number(),
+    hasMore: v.boolean(),
+  }),
   handler: async (ctx, args) => {
     const limit = args.limit || 20;
     const offset = args.offset || 0;
@@ -105,6 +137,38 @@ export const filterMentors = query({
     limit: v.optional(v.number()),
     offset: v.optional(v.number()),
   },
+  returns: v.object({
+    mentors: v.array(v.object({
+      _id: v.id('users'),
+      firstName: v.string(),
+      lastName: v.string(),
+      profileImage: v.optional(v.string()),
+      bio: v.optional(v.string()),
+      location: v.optional(v.string()),
+      militaryBranch: v.optional(v.union(
+        v.literal('Army'),
+        v.literal('Navy'),
+        v.literal('Air Force'),
+        v.literal('Marines'),
+        v.literal('Coast Guard'),
+        v.literal('Space Force')
+      )),
+      militaryRank: v.optional(v.string()),
+      yearsOfService: v.optional(v.number()),
+      currentRole: v.optional(v.string()),
+      company: v.optional(v.string()),
+      industry: v.optional(v.string()),
+      skills: v.optional(v.array(v.string())),
+      mentorshipAreas: v.optional(v.array(v.string())),
+      isVerified: v.boolean(),
+      hasAvailability: v.boolean(),
+      avgRating: v.number(),
+      totalReviews: v.number(),
+      createdAt: v.number(),
+    })),
+    total: v.number(),
+    hasMore: v.boolean(),
+  }),
   handler: async (ctx, args) => {
     const limit = args.limit || 20;
     const offset = args.offset || 0;

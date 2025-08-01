@@ -10,6 +10,7 @@ export const createUserFromClerk = mutation({
     lastName: v.string(),
     profileImage: v.optional(v.string()),
   },
+  returns: v.id('users'),
   handler: async (ctx, args) => {
     // Check if user already exists by Clerk ID
     const existingUser = await ctx.db
@@ -87,6 +88,7 @@ export const createUser = mutation({
     isMentee: v.boolean(),
     mentorshipAreas: v.optional(v.array(v.string())),
   },
+  returns: v.id('users'),
   handler: async (ctx, args) => {
     // Check if user already exists
     const existingUser = await ctx.db
@@ -175,6 +177,7 @@ export const updateProfile = mutation({
     isMentee: v.optional(v.boolean()),
     mentorshipAreas: v.optional(v.array(v.string())),
   },
+  returns: v.id('users'),
   handler: async (ctx, args) => {
     const user = await ctx.db.get(args.userId);
     if (!user) {
@@ -241,6 +244,7 @@ export const updateVerificationStatus = mutation({
     userId: v.id('users'),
     isVerified: v.boolean(),
   },
+  returns: v.id('users'),
   handler: async (ctx, args) => {
     const user = await ctx.db.get(args.userId);
     if (!user) {
@@ -262,6 +266,7 @@ export const updateActiveStatus = mutation({
     userId: v.id('users'),
     isActive: v.boolean(),
   },
+  returns: v.id('users'),
   handler: async (ctx, args) => {
     const user = await ctx.db.get(args.userId);
     if (!user) {
@@ -303,6 +308,7 @@ export const completeProfile = mutation({
     isMentee: v.boolean(),
     mentorshipAreas: v.array(v.string()),
   },
+  returns: v.id('users'),
   handler: async (ctx, args) => {
     const user = await ctx.db.get(args.userId);
     if (!user) {
@@ -371,6 +377,7 @@ export const deleteUser = mutation({
   args: {
     userId: v.id('users'),
   },
+  returns: v.id('users'),
   handler: async (ctx, args) => {
     const user = await ctx.db.get(args.userId);
     if (!user) {

@@ -16,6 +16,55 @@ export const getSessionHistory = query({
     limit: v.optional(v.number()),
     offset: v.optional(v.number()),
   },
+  returns: v.object({
+    sessions: v.array(v.object({
+      _id: v.id('sessions'),
+      requestId: v.id('mentorshipRequests'),
+      mentorId: v.id('users'),
+      menteeId: v.id('users'),
+      scheduledDate: v.string(),
+      scheduledTime: v.string(),
+      actualStartTime: v.optional(v.number()),
+      actualEndTime: v.optional(v.number()),
+      duration: v.optional(v.number()),
+      status: v.union(
+        v.literal('scheduled'),
+        v.literal('in_progress'),
+        v.literal('completed'),
+        v.literal('no_show'),
+        v.literal('cancelled')
+      ),
+      callSid: v.optional(v.string()),
+      callStatus: v.optional(v.string()),
+      mentorNotes: v.optional(v.string()),
+      menteeNotes: v.optional(v.string()),
+      userRole: v.union(v.literal('mentor'), v.literal('mentee')),
+      createdAt: v.number(),
+      updatedAt: v.number(),
+      mentor: v.union(v.object({
+        _id: v.id('users'),
+        firstName: v.string(),
+        lastName: v.string(),
+        profileImage: v.optional(v.string()),
+        currentRole: v.optional(v.string()),
+        company: v.optional(v.string()),
+      }), v.null()),
+      mentee: v.union(v.object({
+        _id: v.id('users'),
+        firstName: v.string(),
+        lastName: v.string(),
+        profileImage: v.optional(v.string()),
+        currentRole: v.optional(v.string()),
+        company: v.optional(v.string()),
+      }), v.null()),
+      request: v.union(v.object({
+        subject: v.string(),
+        mentorshipArea: v.optional(v.string()),
+      }), v.null()),
+    })),
+    total: v.number(),
+    hasMore: v.boolean(),
+  }),
   handler: async (ctx, args) => {
     const limit = args.limit || 20;
     const offset = args.offset || 0;
@@ -125,6 +174,44 @@ export const getUpcomingSessions = query({
     role: v.optional(v.union(v.literal('mentor'), v.literal('mentee'), v.literal('all'))),
     limit: v.optional(v.number()),
   },
+  returns: v.array(v.object({
+    _id: v.id('sessions'),
+    requestId: v.id('mentorshipRequests'),
+    mentorId: v.id('users'),
+    menteeId: v.id('users'),
+    scheduledDate: v.string(),
+    scheduledTime: v.string(),
+    duration: v.number(),
+    status: v.union(
+      v.literal('scheduled'),
+      v.literal('in_progress'),
+      v.literal('completed'),
+      v.literal('no_show'),
+      v.literal('cancelled')
+    ),
+    userRole: v.union(v.literal('mentor'), v.literal('mentee')),
+    createdAt: v.number(),
+    mentor: v.union(v.object({
+      _id: v.id('users'),
+      firstName: v.string(),
+      lastName: v.string(),
+      profileImage: v.optional(v.string()),
+      currentRole: v.optional(v.string()),
+      company: v.optional(v.string()),
+    }), v.null()),
+    mentee: v.union(v.object({
+      _id: v.id('users'),
+      firstName: v.string(),
+      lastName: v.string(),
+      profileImage: v.optional(v.string()),
+      currentRole: v.optional(v.string()),
+      company: v.optional(v.string()),
+    }), v.null()),
+    request: v.union(v.object({
+      subject: v.string(),
+      mentorshipArea: v.optional(v.string()),
+    }), v.null()),
+  })),
   handler: async (ctx, args) => {
     const limit = args.limit || 10;
     const role = args.role || 'all';
@@ -232,6 +319,71 @@ export const getUpcomingSessions = query({
 // Get session details by ID
 export const getSessionById = query({
   args: { sessionId: v.id('sessions') },
+  returns: v.union(v.object({
+    _id: v.id('sessions'),
+    requestId: v.id('mentorshipRequests'),
+    mentorId: v.id('users'),
+    menteeId: v.id('users'),
+    scheduledDate: v.string(),
+    scheduledTime: v.string(),
+    actualStartTime: v.optional(v.number()),
+    actualEndTime: v.optional(v.number()),
+    duration: v.optional(v.number()),
+    status: v.union(
+      v.literal('scheduled'),
+      v.literal('in_progress'),
+      v.literal('completed'),
+      v.literal('no_show'),
+      v.literal('cancelled')
+    ),
+    callSid: v.optional(v.string()),
+    callStatus: v.optional(v.string()),
+    mentorNotes: v.optional(v.string()),
+    menteeNotes: v.optional(v.string()),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+    mentor: v.union(v.object({
+      _id: v.id('users'),
+      firstName: v.string(),
+      lastName: v.string(),
+      profileImage: v.optional(v.string()),
+      currentRole: v.optional(v.string()),
+      company: v.optional(v.string()),
+      industry: v.optional(v.string()),
+      militaryBranch: v.optional(v.union(
+        v.literal('Army'),
+        v.literal('Navy'),
+        v.literal('Air Force'),
+        v.literal('Marines'),
+        v.literal('Coast Guard'),
+        v.literal('Space Force')
+      )),
+      militaryRank: v.optional(v.string()),
+    }), v.null()),
+    mentee: v.union(v.object({
+      _id: v.id('users'),
+      firstName: v.string(),
+      lastName: v.string(),
+      profileImage: v.optional(v.string()),
+      currentRole: v.optional(v.string()),
+      company: v.optional(v.string()),
+      industry: v.optional(v.string()),
+      militaryBranch: v.optional(v.union(
+        v.literal('Army'),
+        v.literal('Navy'),
+        v.literal('Air Force'),
+        v.literal('Marines'),
+        v.literal('Coast Guard'),
+        v.literal('Space Force')
+      )),
+      militaryRank: v.optional(v.string()),
+    }), v.null()),
+    request: v.union(v.object({
+      subject: v.string(),
+      message: v.string(),
+      mentorshipArea: v.optional(v.string()),
+    }), v.null()),
+  }), v.null()),
   handler: async (ctx, args) => {
     const session = await ctx.db.get(args.sessionId);
     if (!session) return null;
@@ -294,6 +446,27 @@ export const getSessionById = query({
 // Get session statistics for a user
 export const getSessionStats = query({
   args: { userId: v.id('users') },
+  returns: v.object({
+    asMentor: v.object({
+      total: v.number(),
+      completed: v.number(),
+      scheduled: v.number(),
+      cancelled: v.number(),
+      noShow: v.number(),
+      totalHours: v.number(),
+    }),
+    asMentee: v.object({
+      total: v.number(),
+      completed: v.number(),
+      scheduled: v.number(),
+      cancelled: v.number(),
+      noShow: v.number(),
+      totalHours: v.number(),
+    }),
+    totalSessions: v.number(),
+    totalCompletedSessions: v.number(),
+    totalHours: v.number(),
+  }),
   handler: async (ctx, args) => {
     // Get all sessions where user is mentor
     const mentorSessions = await ctx.db

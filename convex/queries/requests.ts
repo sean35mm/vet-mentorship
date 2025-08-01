@@ -16,6 +16,49 @@ export const getRequestsByUser = query({
     limit: v.optional(v.number()),
     offset: v.optional(v.number()),
   },
+  returns: v.object({
+    requests: v.array(v.object({
+      _id: v.id('mentorshipRequests'),
+      mentorId: v.id('users'),
+      menteeId: v.id('users'),
+      requestedDate: v.string(),
+      requestedTime: v.string(),
+      duration: v.number(),
+      subject: v.string(),
+      message: v.string(),
+      mentorshipArea: v.optional(v.string()),
+      status: v.union(
+        v.literal('pending'),
+        v.literal('accepted'),
+        v.literal('declined'),
+        v.literal('completed'),
+        v.literal('cancelled')
+      ),
+      mentorResponse: v.optional(v.string()),
+      requestType: v.union(v.literal('sent'), v.literal('received')),
+      createdAt: v.number(),
+      updatedAt: v.number(),
+      respondedAt: v.optional(v.number()),
+      mentor: v.union(v.object({
+        _id: v.id('users'),
+        firstName: v.string(),
+        lastName: v.string(),
+        profileImage: v.optional(v.string()),
+        currentRole: v.optional(v.string()),
+        company: v.optional(v.string()),
+      }), v.null()),
+      mentee: v.union(v.object({
+        _id: v.id('users'),
+        firstName: v.string(),
+        lastName: v.string(),
+        profileImage: v.optional(v.string()),
+        currentRole: v.optional(v.string()),
+        company: v.optional(v.string()),
+      }), v.null()),
+    })),
+    total: v.number(),
+    hasMore: v.boolean(),
+  }),
   handler: async (ctx, args) => {
     const limit = args.limit || 20;
     const offset = args.offset || 0;
@@ -112,6 +155,38 @@ export const getPendingRequests = query({
     limit: v.optional(v.number()),
     offset: v.optional(v.number()),
   },
+  returns: v.object({
+    requests: v.array(v.object({
+      _id: v.id('mentorshipRequests'),
+      menteeId: v.id('users'),
+      requestedDate: v.string(),
+      requestedTime: v.string(),
+      duration: v.number(),
+      subject: v.string(),
+      message: v.string(),
+      mentorshipArea: v.optional(v.string()),
+      createdAt: v.number(),
+      mentee: v.union(v.object({
+        _id: v.id('users'),
+        firstName: v.string(),
+        lastName: v.string(),
+        profileImage: v.optional(v.string()),
+        currentRole: v.optional(v.string()),
+        company: v.optional(v.string()),
+        militaryBranch: v.optional(v.union(
+          v.literal('Army'),
+          v.literal('Navy'),
+          v.literal('Air Force'),
+          v.literal('Marines'),
+          v.literal('Coast Guard'),
+          v.literal('Space Force')
+        )),
+        militaryRank: v.optional(v.string()),
+      }), v.null()),
+    })),
+    total: v.number(),
+    hasMore: v.boolean(),
+  }),
   handler: async (ctx, args) => {
     const limit = args.limit || 10;
     const offset = args.offset || 0;
@@ -167,6 +242,64 @@ export const getPendingRequests = query({
 // Get request details by ID
 export const getRequestById = query({
   args: { requestId: v.id('mentorshipRequests') },
+  returns: v.union(v.object({
+    _id: v.id('mentorshipRequests'),
+    mentorId: v.id('users'),
+    menteeId: v.id('users'),
+    requestedDate: v.string(),
+    requestedTime: v.string(),
+    duration: v.number(),
+    subject: v.string(),
+    message: v.string(),
+    mentorshipArea: v.optional(v.string()),
+    status: v.union(
+      v.literal('pending'),
+      v.literal('accepted'),
+      v.literal('declined'),
+      v.literal('completed'),
+      v.literal('cancelled')
+    ),
+    mentorResponse: v.optional(v.string()),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+    respondedAt: v.optional(v.number()),
+    mentor: v.union(v.object({
+      _id: v.id('users'),
+      firstName: v.string(),
+      lastName: v.string(),
+      profileImage: v.optional(v.string()),
+      currentRole: v.optional(v.string()),
+      company: v.optional(v.string()),
+      industry: v.optional(v.string()),
+      militaryBranch: v.optional(v.union(
+        v.literal('Army'),
+        v.literal('Navy'),
+        v.literal('Air Force'),
+        v.literal('Marines'),
+        v.literal('Coast Guard'),
+        v.literal('Space Force')
+      )),
+      militaryRank: v.optional(v.string()),
+    }), v.null()),
+    mentee: v.union(v.object({
+      _id: v.id('users'),
+      firstName: v.string(),
+      lastName: v.string(),
+      profileImage: v.optional(v.string()),
+      currentRole: v.optional(v.string()),
+      company: v.optional(v.string()),
+      industry: v.optional(v.string()),
+      militaryBranch: v.optional(v.union(
+        v.literal('Army'),
+        v.literal('Navy'),
+        v.literal('Air Force'),
+        v.literal('Marines'),
+        v.literal('Coast Guard'),
+        v.literal('Space Force')
+      )),
+      militaryRank: v.optional(v.string()),
+    }), v.null()),
+  }), v.null()),
   handler: async (ctx, args) => {
     const request = await ctx.db.get(args.requestId);
     if (!request) return null;
@@ -219,6 +352,25 @@ export const getRequestById = query({
 // Get request statistics for a user
 export const getRequestStats = query({
   args: { userId: v.id('users') },
+  returns: v.object({
+    sent: v.object({
+      total: v.number(),
+      pending: v.number(),
+      accepted: v.number(),
+      declined: v.number(),
+      completed: v.number(),
+      cancelled: v.number(),
+    }),
+    received: v.object({
+      total: v.number(),
+      pending: v.number(),
+      accepted: v.number(),
+      declined: v.number(),
+      completed: v.number(),
+      cancelled: v.number(),
+    }),
+    acceptanceRate: v.number(),
+  }),
   handler: async (ctx, args) => {
     // Get all requests where user is mentee
     const sentRequests = await ctx.db

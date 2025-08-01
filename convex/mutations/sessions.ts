@@ -11,6 +11,7 @@ export const createSession = mutation({
     scheduledTime: v.string(),
     duration: v.optional(v.number()),
   },
+  returns: v.id('sessions'),
   handler: async (ctx, args) => {
     // Verify that the request exists and is accepted
     const request = await ctx.db.get(args.requestId);
@@ -68,6 +69,7 @@ export const updateSession = mutation({
     callSid: v.optional(v.string()),
     callStatus: v.optional(v.string()),
   },
+  returns: v.id('sessions'),
   handler: async (ctx, args) => {
     const session = await ctx.db.get(args.sessionId);
     if (!session) {
@@ -143,6 +145,7 @@ export const startSession = mutation({
     sessionId: v.id('sessions'),
     userId: v.id('users'),
   },
+  returns: v.id('sessions'),
   handler: async (ctx, args) => {
     const session = await ctx.db.get(args.sessionId);
     if (!session) {
@@ -208,6 +211,7 @@ export const completeSession = mutation({
     mentorNotes: v.optional(v.string()),
     menteeNotes: v.optional(v.string()),
   },
+  returns: v.id('sessions'),
   handler: async (ctx, args) => {
     const session = await ctx.db.get(args.sessionId);
     if (!session) {
@@ -304,6 +308,7 @@ export const cancelSession = mutation({
     userId: v.id('users'),
     reason: v.optional(v.string()),
   },
+  returns: v.id('sessions'),
   handler: async (ctx, args) => {
     const session = await ctx.db.get(args.sessionId);
     if (!session) {
@@ -362,6 +367,7 @@ export const markNoShow = mutation({
     noShowParty: v.union(v.literal('mentor'), v.literal('mentee'), v.literal('both')),
     notes: v.optional(v.string()),
   },
+  returns: v.id('sessions'),
   handler: async (ctx, args) => {
     const session = await ctx.db.get(args.sessionId);
     if (!session) {

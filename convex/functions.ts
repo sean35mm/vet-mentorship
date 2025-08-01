@@ -4,6 +4,7 @@ import { v } from 'convex/values';
 // Send session reminders for upcoming sessions
 export const sendSessionReminders = internalMutation({
   args: {},
+  returns: v.null(),
   handler: async (ctx) => {
     const now = new Date();
     const thirtyMinutesFromNow = new Date(now.getTime() + 30 * 60 * 1000);
@@ -86,12 +87,15 @@ export const sendSessionReminders = internalMutation({
         createdAt: Date.now(),
       });
     }
+
+    return null;
   },
 });
 
 // Send daily digest notifications
 export const sendDailyDigest = internalMutation({
   args: {},
+  returns: v.null(),
   handler: async (ctx) => {
     const yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
@@ -158,5 +162,7 @@ export const sendDailyDigest = internalMutation({
         });
       }
     }
+
+    return null;
   },
 });

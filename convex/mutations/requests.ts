@@ -13,6 +13,7 @@ export const createRequest = mutation({
     message: v.string(),
     mentorshipArea: v.optional(v.string()),
   },
+  returns: v.id('mentorshipRequests'),
   handler: async (ctx, args) => {
     // Validate that mentee and mentor exist and are active
     const mentee = await ctx.db.get(args.menteeId);
@@ -181,6 +182,10 @@ export const acceptRequest = mutation({
     mentorId: v.id('users'),
     mentorResponse: v.optional(v.string()),
   },
+  returns: v.object({
+    requestId: v.id('mentorshipRequests'),
+    sessionId: v.id('sessions'),
+  }),
   handler: async (ctx, args) => {
     const request = await ctx.db.get(args.requestId);
     if (!request) {
@@ -274,6 +279,7 @@ export const declineRequest = mutation({
     mentorId: v.id('users'),
     mentorResponse: v.optional(v.string()),
   },
+  returns: v.id('mentorshipRequests'),
   handler: async (ctx, args) => {
     const request = await ctx.db.get(args.requestId);
     if (!request) {
@@ -331,6 +337,7 @@ export const cancelRequest = mutation({
     requestId: v.id('mentorshipRequests'),
     menteeId: v.id('users'),
   },
+  returns: v.id('mentorshipRequests'),
   handler: async (ctx, args) => {
     const request = await ctx.db.get(args.requestId);
     if (!request) {
@@ -383,6 +390,7 @@ export const updateRequest = mutation({
     message: v.optional(v.string()),
     mentorshipArea: v.optional(v.string()),
   },
+  returns: v.id('mentorshipRequests'),
   handler: async (ctx, args) => {
     const request = await ctx.db.get(args.requestId);
     if (!request) {

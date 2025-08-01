@@ -8,6 +8,43 @@ export const getReviewsByMentor = query({
     limit: v.optional(v.number()),
     offset: v.optional(v.number()),
   },
+  returns: v.object({
+    reviews: v.array(v.object({
+      _id: v.id('reviews'),
+      sessionId: v.id('sessions'),
+      rating: v.number(),
+      feedback: v.string(),
+      communicationRating: v.optional(v.number()),
+      helpfulnessRating: v.optional(v.number()),
+      professionalismRating: v.optional(v.number()),
+      response: v.optional(v.string()),
+      respondedAt: v.optional(v.number()),
+      createdAt: v.number(),
+      reviewer: v.union(v.object({
+        _id: v.id('users'),
+        firstName: v.string(),
+        lastName: v.string(),
+        profileImage: v.optional(v.string()),
+        currentRole: v.optional(v.string()),
+        company: v.optional(v.string()),
+        militaryBranch: v.optional(v.union(
+          v.literal('Army'),
+          v.literal('Navy'),
+          v.literal('Air Force'),
+          v.literal('Marines'),
+          v.literal('Coast Guard'),
+          v.literal('Space Force')
+        )),
+        militaryRank: v.optional(v.string()),
+      }), v.null()),
+      session: v.union(v.object({
+        scheduledDate: v.string(),
+        duration: v.optional(v.number()),
+      }), v.null()),
+    })),
+    total: v.number(),
+    hasMore: v.boolean(),
+  }),
   handler: async (ctx, args) => {
     const limit = args.limit || 20;
     const offset = args.offset || 0;
@@ -69,6 +106,15 @@ export const getReviewsByMentor = query({
 // Get review statistics for a mentor
 export const getReviewStats = query({
   args: { mentorId: v.id('users') },
+  returns: v.object({
+    totalReviews: v.number(),
+    averageRating: v.number(),
+    ratingDistribution: v.record(v.string(), v.number()),
+    averageCommunicationRating: v.number(),
+    averageHelpfulnessRating: v.number(),
+    averageProfessionalismRating: v.number(),
+    responseRate: v.number(),
+  }),
   handler: async (ctx, args) => {
     const reviews = await ctx.db
       .query('reviews')
@@ -144,6 +190,38 @@ export const getReviewsByReviewer = query({
     limit: v.optional(v.number()),
     offset: v.optional(v.number()),
   },
+  returns: v.object({
+    reviews: v.array(v.object({
+      _id: v.id('reviews'),
+      sessionId: v.id('sessions'),
+      rating: v.number(),
+      feedback: v.string(),
+      communicationRating: v.optional(v.number()),
+      helpfulnessRating: v.optional(v.number()),
+      professionalismRating: v.optional(v.number()),
+      isPublic: v.boolean(),
+      isApproved: v.boolean(),
+      response: v.optional(v.string()),
+      respondedAt: v.optional(v.number()),
+      createdAt: v.number(),
+      updatedAt: v.number(),
+      reviewee: v.union(v.object({
+        _id: v.id('users'),
+        firstName: v.string(),
+        lastName: v.string(),
+        profileImage: v.optional(v.string()),
+        currentRole: v.optional(v.string()),
+        company: v.optional(v.string()),
+      }), v.null()),
+      session: v.union(v.object({
+        scheduledDate: v.string(),
+        scheduledTime: v.string(),
+        duration: v.optional(v.number()),
+      }), v.null()),
+    })),
+    total: v.number(),
+    hasMore: v.boolean(),
+  }),
   handler: async (ctx, args) => {
     const limit = args.limit || 20;
     const offset = args.offset || 0;
@@ -205,6 +283,62 @@ export const getReviewsByReviewer = query({
 // Get review by ID
 export const getReviewById = query({
   args: { reviewId: v.id('reviews') },
+  returns: v.union(v.object({
+    _id: v.id('reviews'),
+    sessionId: v.id('sessions'),
+    reviewerId: v.id('users'),
+    revieweeId: v.id('users'),
+    rating: v.number(),
+    feedback: v.string(),
+    communicationRating: v.optional(v.number()),
+    helpfulnessRating: v.optional(v.number()),
+    professionalismRating: v.optional(v.number()),
+    isPublic: v.boolean(),
+    isApproved: v.boolean(),
+    response: v.optional(v.string()),
+    respondedAt: v.optional(v.number()),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+    reviewer: v.union(v.object({
+      _id: v.id('users'),
+      firstName: v.string(),
+      lastName: v.string(),
+      profileImage: v.optional(v.string()),
+      currentRole: v.optional(v.string()),
+      company: v.optional(v.string()),
+      militaryBranch: v.optional(v.union(
+        v.literal('Army'),
+        v.literal('Navy'),
+        v.literal('Air Force'),
+        v.literal('Marines'),
+        v.literal('Coast Guard'),
+        v.literal('Space Force')
+      )),
+      militaryRank: v.optional(v.string()),
+    }), v.null()),
+    reviewee: v.union(v.object({
+      _id: v.id('users'),
+      firstName: v.string(),
+      lastName: v.string(),
+      profileImage: v.optional(v.string()),
+      currentRole: v.optional(v.string()),
+      company: v.optional(v.string()),
+      militaryBranch: v.optional(v.union(
+        v.literal('Army'),
+        v.literal('Navy'),
+        v.literal('Air Force'),
+        v.literal('Marines'),
+        v.literal('Coast Guard'),
+        v.literal('Space Force')
+      )),
+      militaryRank: v.optional(v.string()),
+    }), v.null()),
+    session: v.union(v.object({
+      scheduledDate: v.string(),
+      scheduledTime: v.string(),
+      duration: v.optional(v.number()),
+    }), v.null()),
+  }), v.null()),
   handler: async (ctx, args) => {
     const review = await ctx.db.get(args.reviewId);
     if (!review) return null;
@@ -262,6 +396,26 @@ export const getReviewById = query({
 // Get pending reviews for a user (sessions they need to review)
 export const getPendingReviews = query({
   args: { userId: v.id('users') },
+  returns: v.array(v.object({
+    sessionId: v.id('sessions'),
+    mentorId: v.id('users'),
+    scheduledDate: v.string(),
+    scheduledTime: v.string(),
+    duration: v.optional(v.number()),
+    completedAt: v.number(),
+    mentor: v.union(v.object({
+      _id: v.id('users'),
+      firstName: v.string(),
+      lastName: v.string(),
+      profileImage: v.optional(v.string()),
+      currentRole: v.optional(v.string()),
+      company: v.optional(v.string()),
+    }), v.null()),
+    request: v.union(v.object({
+      subject: v.string(),
+      mentorshipArea: v.optional(v.string()),
+    }), v.null()),
+  })),
   handler: async (ctx, args) => {
     // Get completed sessions where user was mentee
     const completedSessions = await ctx.db

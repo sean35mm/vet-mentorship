@@ -7,14 +7,16 @@ const crons = cronJobs();
 crons.interval(
   'session-reminders',
   { minutes: 5 }, // Check every 5 minutes
-  internal.functions.sendSessionReminders
+  internal.functions.sendSessionReminders,
+  {}
 );
 
 // Send daily digest notifications
-crons.daily(
+crons.cron(
   'daily-digest',
-  { hourUTC: 9, minuteUTC: 0 }, // 9 AM UTC
-  internal.functions.sendDailyDigest
+  '0 9 * * *', // 9 AM UTC daily (minute hour day month dayOfWeek)
+  internal.functions.sendDailyDigest,
+  {}
 );
 
 export default crons;

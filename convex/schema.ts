@@ -151,7 +151,10 @@ export default defineSchema({
     .index('by_mentee', ['menteeId'])
     .index('by_mentor', ['mentorId'])
     .index('by_status', ['status'])
-    .index('by_date', ['scheduledDate']),
+    .index('by_date', ['scheduledDate'])
+    .index('by_date_status', ['scheduledDate', 'status'])
+    .index('by_mentee_status', ['menteeId', 'status'])
+    .index('by_mentor_status', ['mentorId', 'status']),
 
   // Reviews table - session feedback and ratings
   reviews: defineTable({
@@ -236,7 +239,9 @@ export default defineSchema({
     .index('by_user', ['userId'])
     .index('by_user_unread', ['userId', 'isRead'])
     .index('by_type', ['type'])
-    .index('by_created', ['createdAt']),
+    .index('by_created', ['createdAt'])
+    .index('by_user_type', ['userId', 'type'])
+    .index('by_session_type', ['relatedSessionId', 'type']),
 
   // Messages table - for future chat functionality
   messages: defineTable({

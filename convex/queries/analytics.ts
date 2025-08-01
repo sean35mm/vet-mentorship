@@ -4,6 +4,33 @@ import { v } from 'convex/values';
 // Get dashboard analytics for a user
 export const getDashboardAnalytics = query({
   args: { userId: v.id('users') },
+  returns: v.object({
+    overview: v.object({
+      totalSessions: v.number(),
+      completedSessions: v.number(),
+      totalHours: v.number(),
+      averageRating: v.number(),
+      totalReviews: v.number(),
+      recentSessions: v.number(),
+    }),
+    weeklyTrend: v.array(v.object({
+      week: v.string(),
+      sessions: v.number(),
+      hours: v.number(),
+    })),
+    requestStatusCounts: v.object({
+      pending: v.number(),
+      accepted: v.number(),
+      completed: v.number(),
+      declined: v.number(),
+      cancelled: v.number(),
+    }),
+    recentActivity: v.object({
+      lastWeekSessions: v.number(),
+      pendingRequests: v.number(),
+      upcomingSessions: v.number(),
+    }),
+  }),
   handler: async (ctx, args) => {
     const user = await ctx.db.get(args.userId);
     if (!user) throw new Error('User not found');
@@ -100,6 +127,10 @@ export const getDashboardAnalytics = query({
 // Get mentorship areas analytics
 export const getMentorshipAreasAnalytics = query({
   args: { userId: v.id('users') },
+  returns: v.array(v.object({
+    area: v.string(),
+    count: v.number(),
+  })),
   handler: async (ctx, args) => {
     const requests = await ctx.db
       .query('mentorshipRequests')
@@ -129,6 +160,31 @@ export const getMentorshipAreasAnalytics = query({
 // Get platform-wide analytics (for admin dashboard)
 export const getPlatformAnalytics = query({
   args: {},
+  returns: v.object({
+    users: v.object({
+      total: v.number(),
+      active: v.number(),
+      mentors: v.number(),
+      mentees: v.number(),
+      recent: v.number(),
+    }),
+    sessions: v.object({
+      total: v.number(),
+      completed: v.number(),
+      recent: v.number(),
+      totalHours: v.number(),
+    }),
+    requests: v.object({
+      total: v.number(),
+      recent: v.number(),
+      acceptanceRate: v.number(),
+    }),
+    monthlyGrowth: v.array(v.object({
+      month: v.string(),
+      users: v.number(),
+      sessions: v.number(),
+    })),
+  }),
   handler: async (ctx) => {
     const now = Date.now();
     const thirtyDaysAgo = now - (30 * 24 * 60 * 60 * 1000);

@@ -117,8 +117,7 @@ export default function LandingPage() {
               <div className="flex items-center justify-center mb-2 text-fire_brick-400">
                 <Calendar className="h-6 w-6" />
               </div>
-              <div className="text-3xl font-bold text-papaya_whip-500">15,000+</div>
-              <div className="text-sm text-air_superiority_blue-300">Missions Completed</div>
+              <div className="text-3xl font-bold text-papaya_whip-500">15,000+</div><div className="text-sm text-air_superiority_blue-300">Missions Completed</div>
             </div>
             <div className="text-center">
               <div className="flex items-center justify-center mb-2 text-fire_brick-400">
@@ -204,23 +203,7 @@ export default function LandingPage() {
               <CardContent>
                 <CardDescription className="text-base text-prussian_blue-400">
                   Get matched with mentors based on your career objectives, MOS, and military background.
-                </CardDescription>
-              </CardContent>
-            </Card>
-
-            <Card className="transition-all duration-200 hover:shadow-lg hover:-translate-y-1 bg-papaya_whip-500 border-air_superiority_blue-200">
-              <CardHeader>
-                <div className="flex items-center space-x-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-fire_brick-100 text-fire_brick-600">
-                    <MessageSquare className="h-6 w-6" />
-                  </div>
-                  <CardTitle className="text-xl text-prussian_blue-500">Secure Communications</CardTitle>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className="text-base text-prussian_blue-400">
-                  Stay connected with encrypted messaging and secure video call capabilities.
-                </CardDescription>
+                </CardDescription> </CardContent> </Card> <Card className="transition-all duration-200 hover:shadow-lg hover:-translate-y-1 bg-papaya_whip-500 border-air_superiority_blue-200"> <CardHeader> <div className="flex items-center space-x-3"> <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-fire_brick-100 text-fire_brick-600"> <MessageSquare className="h-6 w-6" /> </div> <CardTitle className="text-xl text-prussian_blue-500">Secure Communications</CardTitle> </div> </CardHeader> <CardContent> <CardDescription className="text-base text-prussian_blue-400"> Stay connected with encrypted messaging and secure video call capabilities. </CardDescription>
               </CardContent>
             </Card>
 

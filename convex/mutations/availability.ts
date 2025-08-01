@@ -11,6 +11,7 @@ export const setAvailability = mutation({
       endTime: v.string(),   // Format: "HH:MM"
     })),
   },
+  returns: v.array(v.id('availability')),
   handler: async (ctx, args) => {
     // Verify that the user exists and is a mentor
     const user = await ctx.db.get(args.userId);
@@ -119,6 +120,7 @@ export const addTimeSlot = mutation({
     startTime: v.string(),
     endTime: v.string(),
   },
+  returns: v.id('availability'),
   handler: async (ctx, args) => {
     // Verify that the user exists and is a mentor
     const user = await ctx.db.get(args.userId);
@@ -195,6 +197,7 @@ export const updateTimeSlot = mutation({
     endTime: v.optional(v.string()),
     isActive: v.optional(v.boolean()),
   },
+  returns: v.id('availability'),
   handler: async (ctx, args) => {
     const availability = await ctx.db.get(args.availabilityId);
     if (!availability) {
@@ -285,6 +288,7 @@ export const deleteTimeSlot = mutation({
     availabilityId: v.id('availability'),
     userId: v.id('users'),
   },
+  returns: v.id('availability'),
   handler: async (ctx, args) => {
     const availability = await ctx.db.get(args.availabilityId);
     if (!availability) {
@@ -339,6 +343,7 @@ export const clearAvailability = mutation({
   args: {
     userId: v.id('users'),
   },
+  returns: v.number(),
   handler: async (ctx, args) => {
     // Verify that the user exists and is a mentor
     const user = await ctx.db.get(args.userId);

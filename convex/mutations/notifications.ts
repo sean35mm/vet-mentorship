@@ -34,6 +34,7 @@ export const createNotification = mutation({
       reviewId: v.optional(v.string()),
     })),
   },
+  returns: v.id('notifications'),
   handler: async (ctx, args) => {
     const notificationId = await ctx.db.insert('notifications', {
       userId: args.userId,
@@ -57,16 +58,19 @@ export const createNotification = mutation({
 
 export const markAsRead = mutation({
   args: { notificationId: v.id('notifications') },
+  returns: v.null(),
   handler: async (ctx, args) => {
     await ctx.db.patch(args.notificationId, {
       isRead: true,
       readAt: Date.now(),
     });
+    return null;
   },
 });
 
 export const markAllAsRead = mutation({
   args: { userId: v.id('users') },
+  returns: v.null(),
   handler: async (ctx, args) => {
     const unreadNotifications = await ctx.db
       .query('notifications')
