@@ -6,7 +6,8 @@
   "description": "Veteran Mentorship Platform - Connecting military veterans for peer-to-peer mentorship",
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "convex deploy && next build",
+    "vercel-build": "convex deploy && next build",
     "start": "next start",
     "lint": "next lint",
     "lint:fix": "next lint --fix",
